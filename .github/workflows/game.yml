@@ -1,0 +1,76 @@
+name: Sync and Convert Game Rules
+
+on:
+  schedule:
+    - cron: '0 18 * * *'  # 北京时间 02:00 执行
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  game_rules:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Git user
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Create action directory
+      run: mkdir -p rules/Game/action
+
+    - name: Fetch Game Rules and Remove Private CIDR & Comments
+      run: |
+        # 克隆 SSTap-Rule 仓库，仅拉取 rules 目录
+        git clone --depth=1 --filter=blob:none --sparse https://github.com/FQrabbit/SSTap-Rule.git tmp_repo
+        cd tmp_repo
+        git sparse-checkout set rules
+        cp -r rules/* ../rules/Game/action/
+        cd ..
+        rm -rf tmp_repo
+
+        # 删除私有地址 CIDR 和注释行
+        sed -i '/(^10|^172\.(1[6-9]|2[0-9]|3[01])|^192.168|^169.254|^22[4-9]|^2[3-5][0-9]).*/d' rules/Game/action/*.rules
+        sed -i '/^#/d' rules/Game/action/*.rules  # 删除注释行
+
+    - name: Convert Rules to YAML
+      run: |
+        mkdir -p rules/Game
+        for file in rules/Game/action/*.rules; do
+          filename=$(basename -- "$file")
+          name="${filename%.rules}"
+          
+          # 替换空格为连字符，替换&为and
+          safe_name="${name// /-}"   # 替换空格为连字符
+          safe_name="${safe_name//&/and}"  # 替换&为and
+
+          output="rules/Game/${safe_name}.yaml"
+
+          echo "payload:" > "$output"
+          
+          # 读取规则并生成YAML，过滤掉私有IP
+          while IFS= read -r line; do
+            if [[ -n "$line" && ! "$line" =~ ^(10\..*|172\.(1[6-9]|2[0-9]|3[01])\..*|192\.168\..*|169\.254\..*|22[4-9]\..*|2[3-5][0-9]\..*)$ ]]; then
+              echo "  - '$line'" >> "$output"
+            fi
+          done < "$file"
+        done
+
+    - name: Remove Action Folder
+      run: rm -rf rules/Game/action
+
+    - name: Pull Latest Changes from Remote
+      run: |
+        git pull origin main
+
+    - name: Commit and Push Changes
+      run: |
+        git add .
+        git diff-index --quiet HEAD -- || (git commit -m "Updated game rules" && git push)
