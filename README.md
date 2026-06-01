@@ -93,6 +93,8 @@
 >
 <a href="https://github.com/chen08209/FlClash"><img src="https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/flclash.png" width="32" style="vertical-align:middle;"/> Flclash</a>
 >
+<a href="https://github.com/appshubcc/Bettbox"><img src="https://raw.githubusercontent.com/appshubcc/Bettbox/refs/heads/main/assets/images/icon_black.png" width="32" style="vertical-align:middle;"/> Bettbox</a>
+>
 <a href="https://github.com/pluralplay/FlClashX"><img src="https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/flclashx.png" width="32" style="vertical-align:middle;"/> FlclashX</a>
 >
 >
@@ -103,6 +105,8 @@
 •Android
 >
 <a href="https://github.com/chen08209/FlClash"><img src="https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/flclash.png" width="32" style="vertical-align:middle;"/> Flclash</a>
+>
+<a href="https://github.com/appshubcc/Bettbox"><img src="https://raw.githubusercontent.com/appshubcc/Bettbox/refs/heads/main/assets/images/icon_black.png" width="32" style="vertical-align:middle;"/> Bettbox</a>
 >
 <a href="https://github.com/pluralplay/FlClashX"><img src="https://raw.githubusercontent.com/Lanlan13-14/Icon-for-webui/refs/heads/main/flclash.png" width="32" style="vertical-align:middle;"/> FlclashX</a>
 >
